@@ -1,21 +1,19 @@
-// Tunggu sampai Appwrite siap
-document.addEventListener('appwrite-ready', function() {
-    initAuth();
-});
-
-// Atau langsung jalankan kalau sudah siap
-if (window.account) {
-    initAuth();
-} else {
-    document.addEventListener('appwrite-ready', initAuth);
-}
-
+// Inisialisasi setelah Appwrite siap
 function initAuth() {
+    console.log('🔐 Inisialisasi Auth...');
+    
+    // Cek apakah account tersedia
+    if (!window.account) {
+        console.error('❌ Account tidak tersedia!');
+        return;
+    }
+    
     const account = window.account;
     
     // ============ REGISTER ============
-    if (document.getElementById('registerForm')) {
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const name = document.getElementById('name').value;
@@ -23,7 +21,20 @@ function initAuth() {
             const password = document.getElementById('password').value;
             const messageEl = document.getElementById('message');
             
+            // Reset message
+            messageEl.className = 'message';
+            messageEl.textContent = '';
+            
+            // Validasi password minimal 8 karakter
+            if (password.length < 8) {
+                messageEl.className = 'message error';
+                messageEl.textContent = '❌ Password minimal 8 karakter!';
+                return;
+            }
+            
             try {
+                console.log('📝 Mendaftar akun...');
+                
                 // Buat akun baru
                 await account.create('unique()', email, password, name);
                 
@@ -39,6 +50,7 @@ function initAuth() {
                 }, 1500);
                 
             } catch (error) {
+                console.error('Register error:', error);
                 messageEl.className = 'message error';
                 messageEl.textContent = '❌ ' + error.message;
             }
@@ -46,15 +58,22 @@ function initAuth() {
     }
 
     // ============ LOGIN ============
-    if (document.getElementById('loginForm')) {
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const messageEl = document.getElementById('message');
             
+            // Reset message
+            messageEl.className = 'message';
+            messageEl.textContent = '';
+            
             try {
+                console.log('🔑 Login...');
+                
                 // Login
                 await account.createEmailPasswordSession(email, password);
                 
@@ -67,6 +86,7 @@ function initAuth() {
                 }, 1500);
                 
             } catch (error) {
+                console.error('Login error:', error);
                 messageEl.className = 'message error';
                 messageEl.textContent = '❌ ' + error.message;
             }
@@ -82,4 +102,12 @@ function initAuth() {
             console.error('Logout error:', error);
         }
     };
+}
+
+// Ekspos fungsi initAuth ke global
+window.initAuth = initAuth;
+
+// Jalankan init jika Appwrite sudah siap
+if (window.account) {
+    initAuth();
 }

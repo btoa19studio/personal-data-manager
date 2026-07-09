@@ -1,8 +1,16 @@
-// Tunggu sampai Appwrite SDK siap
+// Tunggu sampai DOM siap
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('📦 Memuat Appwrite SDK...');
+    
+    // Cek apakah Appwrite tersedia
+    if (typeof Appwrite === 'undefined') {
+        console.error('❌ Appwrite SDK tidak ditemukan!');
+        return;
+    }
+    
     const APPWRITE_CONFIG = {
         endpoint: 'https://cloud.appwrite.io/v1',
-        projectId: '6a4f14c600122aca9f57',  // Ganti dengan Project ID dari Appwrite
+        projectId: 'YOUR_PROJECT_ID',  // Ganti dengan Project ID dari Appwrite
     };
 
     const { Client, Account } = Appwrite;
@@ -19,17 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Simpan ke window agar bisa diakses dari file lain
     window.account = account;
 
-    // Cek session aktif
-    window.checkSession = async function() {
-        try {
-            const user = await account.get();
-            return user;
-        } catch (error) {
-            return null;
-        }
-    };
-
     console.log('✅ Appwrite siap!');
+    
+    // Panggil fungsi init setelah Appwrite siap
+    if (typeof initAuth === 'function') {
+        initAuth();
+    }
     
     // Trigger event bahwa Appwrite sudah siap
     document.dispatchEvent(new Event('appwrite-ready'));
