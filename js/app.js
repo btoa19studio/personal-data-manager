@@ -1,4 +1,7 @@
-import APPWRITE_CONFIG from '../appwrite/config.js';
+const APPWRITE_CONFIG = {
+    endpoint: 'https://cloud.appwrite.io/v1',
+    projectId: '6a4f14c600122aca9f57',  // Ganti dengan Project ID dari Appwrite
+};
 
 const { Client, Account } = Appwrite;
 
@@ -8,8 +11,11 @@ client
     .setEndpoint(APPWRITE_CONFIG.endpoint)
     .setProject(APPWRITE_CONFIG.projectId);
 
-// Export Account untuk digunakan di file lain
+// Buat instance Account
 const account = new Account(client);
+
+// Simpan ke window agar bisa diakses dari file lain
+window.account = account;
 
 // Cek session aktif
 async function checkSession() {
@@ -21,6 +27,6 @@ async function checkSession() {
     }
 }
 
-// Export ke global
-window.account = account;
 window.checkSession = checkSession;
+
+console.log('✅ Appwrite siap!');

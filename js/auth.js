@@ -9,6 +9,9 @@ if (document.getElementById('registerForm')) {
         const messageEl = document.getElementById('message');
         
         try {
+            // Gunakan window.account (dari app.js)
+            const account = window.account;
+            
             // Buat akun baru
             await account.create('unique()', email, password, name);
             
@@ -40,6 +43,9 @@ if (document.getElementById('loginForm')) {
         const messageEl = document.getElementById('message');
         
         try {
+            // Gunakan window.account (dari app.js)
+            const account = window.account;
+            
             // Login
             await account.createEmailPasswordSession(email, password);
             
@@ -61,6 +67,7 @@ if (document.getElementById('loginForm')) {
 // ============ LOGOUT ============
 async function logout() {
     try {
+        const account = window.account;
         await account.deleteSession('current');
         window.location.href = 'login.html';
     } catch (error) {
