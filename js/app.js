@@ -1,16 +1,28 @@
+console.log('📦 Memuat Appwrite SDK...');
+
 // Tunggu sampai DOM siap
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📦 Memuat Appwrite SDK...');
+    console.log('📦 DOM siap, cek Appwrite...');
     
     // Cek apakah Appwrite tersedia
     if (typeof Appwrite === 'undefined') {
         console.error('❌ Appwrite SDK tidak ditemukan!');
+        console.log('💡 Coba muat ulang halaman atau cek koneksi internet');
+        
+        // Tampilkan pesan di halaman
+        const body = document.querySelector('body');
+        const warning = document.createElement('div');
+        warning.style.cssText = 'background: #f8d7da; color: #721c24; padding: 20px; text-align: center; border-bottom: 3px solid #f5c6cb;';
+        warning.innerHTML = '⚠️ Gagal memuat Appwrite SDK. Cek koneksi internet dan refresh halaman.';
+        body.prepend(warning);
         return;
     }
     
+    console.log('✅ Appwrite SDK terdeteksi!');
+    
     const APPWRITE_CONFIG = {
         endpoint: 'https://cloud.appwrite.io/v1',
-        projectId: 'YOUR_PROJECT_ID',  // Ganti dengan Project ID dari Appwrite
+        projectId: '6a4f14c600122aca9f57',  // Ganti dengan Project ID dari Appwrite
     };
 
     const { Client, Account } = Appwrite;
